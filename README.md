@@ -34,7 +34,7 @@ Description of Flow:
       
     • Custom Jenkins Image is pushed on Docker Hub:
       
-    • asadullahkhan/custom-jenkins-java11:v4 which is updated image i used in our kubernetes deployment yaml file
+    • asadullahkhan/custom-jenkins-java11:v4 which is updated image i used in my  kubernetes deployment yaml file
       
     • I used  Persistent Volume and Persistent Volume Claim for Persistent Storage on my kubernetes host file system  as I don’t have any cloud storage available I.e EFS,EBS Azure Disk. 
 
