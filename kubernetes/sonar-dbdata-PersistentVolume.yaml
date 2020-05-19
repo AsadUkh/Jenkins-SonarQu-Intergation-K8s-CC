@@ -1,0 +1,15 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pv-sonar-data
+  labels:
+    pv: sonar-db-data
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: "/mnt/pgdata"
+  persistentVolumeReclaimPolicy: Delete
+

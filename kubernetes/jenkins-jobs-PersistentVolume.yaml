@@ -1,0 +1,14 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pv-jenkin-jobs
+  labels:
+    pv: jenkins-jobs
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 700Mi
+  hostPath:
+    path: "/mnt/jenkin-job"
+  persistentVolumeReclaimPolicy: Delete                                        

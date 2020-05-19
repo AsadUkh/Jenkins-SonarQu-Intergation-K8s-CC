@@ -1,0 +1,14 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pv-sonar-extensions
+  labels:
+    pv: sonar-extentions
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: "/mnt/sonar-extenstions"
+  persistentVolumeReclaimPolicy: Delete

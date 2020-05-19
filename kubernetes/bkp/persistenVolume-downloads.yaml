@@ -1,0 +1,12 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pv-jenkin-downloads
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 500Mi
+  hostPath:
+    path: /home/asad/jk_sc_proj/jenkins_docker_pipeline_tutorial1/downloads/
+  persistentVolumeReclaimPolicy: Delete                                        

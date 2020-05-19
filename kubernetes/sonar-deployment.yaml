@@ -1,0 +1,60 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: sonar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sonar
+  template:
+    metadata:
+      name: sonar
+      labels: 
+        app: sonar
+    spec: 
+      containers:
+      - name: sonar
+        image: sonarqube:7.9.1-community
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9000
+          name: sonarport
+        resources:
+          requests:
+            memory: 2000Mi
+          limits:
+            memory: 2000Mi
+        volumeMounts:
+        - mountPath: "/opt/sonarqube/data/"
+          name: sonar-ui-data
+        - mountPath: "/opt/sonarqube/extensions/"
+          name: sonar-extensions
+        env: 
+          - name: SONARQUBE_JDBC_USERNAME
+            value: sonar
+          - name: SONARQUBE_JDBC_PASSWORD
+            value: password
+          - name: SONARQUBE_JDBC_URL
+            value: jdbc:postgresql://postgresql-db:5432/sonar
+      initContainers:
+      - name: sysctl
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        command: ['sysctl', '-w', 'vm.max_map_count=262144']
+        command: ["sh","-c","chown -R 999:999 /opt/sonarqube/"]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: "/opt/sonarqube/data/"
+          name: sonar-ui-data
+        - mountPath: "/opt/sonarqube/extensions/"
+          name: sonar-extensions
+
+      volumes:
+      - name: sonar-ui-data
+        persistentVolumeClaim:
+          claimName: sonar-ui-data
+      - name: sonar-extensions
+        persistentVolumeClaim:
+          claimName: sonar-extensions

@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: jenkins
+  name: jenkinswebinterface
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - name: jenkins-container
+        image: asadullahkhan/custom-jenkins-java11:v4
+        env:
+          - name: SONARQUBE_HOST
+            value: http://sonar:9200 
+
+        # command: ["/bin/bash","-c","chown -R jenkins:jenkins /var/jenkins_home/"]
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        #- mountPath: /var/jenkins_home/downloads/jdk-11.0.7_linux-x64_bin.tar.gz
+        #  name: downloads
+        - mountPath: /var/jenkins_home/
+          name: job  
+      restartPolicy: Always
+      initContainers:
+       - name: take-data-dir-ownership
+         image: alpine:3.6
+         command: ["sh","-c","chown -R 1000:1000 /var/jenkins_home/","cp -r /var/jenkins/downloads/ /var/jenkins_home/"]
+         volumeMounts:
+         - name: job
+           mountPath: "/var/jenkins_home/"
+      volumes:
+      - name: job
+        persistentVolumeClaim:
+          claimName: job
+          #- name: downloads
+          #hostPath:
+          #path: /var/jenkins_home/downloads/jdk-11.0.7_linux-x64_bin.tar.gz
+          #type: FileOrCreate
+
+

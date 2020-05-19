@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: jenkins
+  name: jenkinswebinterface
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - name: jenkins-container
+        image: asadullahkhan/custom-jenkins-java11:v1
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: /var/jenkins_home/downloads
+          name: downloadsfiles
+        - mountPath: /var/jenkins_home/jobs/
+          name: jobs  
+      restartPolicy: Always
+      initContainers:
+              #- name: take-data-dir-ownership
+              #image: 
+              #command:
+              #- sh
+              #- -c
+              #- chown -R jenkins:jenkins /var/jenkins_home/      
+      volumes:
+      - name: downloadsfiles
+        emptyDir: {}
+        #hostPath:
+          # directory location on host
+          #path: /home/asad/jk_sc_proj/jenkins_docker_pipeline_tutorial1/downloads/
+          # this field is optional
+          #type: DirectoryOrCreate
+      - name: jobs
+        emptyDir: {}
+        #hostPath:
+          # Ensure the file directory is created.
+          # path: /home/asad/jk_sc_proj/jenkins_docker_pipeline_tutorial1/jobs/
+          # type: DirectoryOrCreate

@@ -1,0 +1,16 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pv-sonar-data-ui
+  labels:
+    pv: sonar-ui-data
+
+spec:
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: "/mnt/sonar-data"
+  persistentVolumeReclaimPolicy: Delete
+
